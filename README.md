@@ -12,7 +12,7 @@ A .NET Core alapú szoftver két nagy részből épül fel:
     - Frontend: A felhasználók számára a böngészőből történő eszközök vezérlését végzi.
 #### Az adatbázis diagramja
 
-![](DatabaseDiagram.png)
+![](DatabaseDiagram.PNG)
 
 #### Magyarázat:
 - Sensors: `Itt tároljuk a itatóban lévő vízszintmérő eszközt.`
