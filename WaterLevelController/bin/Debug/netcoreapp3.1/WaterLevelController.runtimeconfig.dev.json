@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\gyula\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\gyula\\.nuget\\packages"
+    ]
+  }
+}
