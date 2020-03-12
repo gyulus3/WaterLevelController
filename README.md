@@ -19,7 +19,7 @@ A .NET Core alapú szoftver két nagy részből épül fel:
 
 - Switches: `Itt tároljuk azokat az eszközöket, amely a víz adagolásáért felelős, valamilyen vízforráshoz csatlakozik. (Lehet az: kútban lévő búvárszivattyú vagy elektromos vízszelep.)`
 
-- Scehdules: `Itt tároljuk az egyes eszközökhöz rendelt ütemezéseket, lehet az itató újratöltése automatikus, amely a MinWaterLevel értékben megadott küszöbszint alapján dönt, illetve lehet kézi, ha az Auto értéke false.`
+- Schedules: `Itt tároljuk az egyes eszközökhöz rendelt ütemezéseket, lehet az itató újratöltése automatikus, amely a MinWaterLevel értékben megadott küszöbszint alapján dönt, illetve lehet kézi, ha az Auto értéke false.`
 
 - Ranches: `Itt tároljuk az egyes címeket/telephelyeket, amik egy-egy farmot/tanyát/egyéb ingatlant határoznak meg.`
 
