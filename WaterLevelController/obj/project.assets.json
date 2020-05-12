@@ -7317,11 +7317,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelController\\WaterLevelController.csproj",
+      "projectUniqueName": "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelController\\WaterLevelController.csproj",
       "projectName": "WaterLevelController",
-      "projectPath": "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelController\\WaterLevelController.csproj",
+      "projectPath": "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelController\\WaterLevelController.csproj",
       "packagesPath": "C:\\Users\\gyula\\.nuget\\packages\\",
-      "outputPath": "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelController\\obj\\",
+      "outputPath": "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelController\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Microsoft\\Xamarin\\NuGet\\"

@@ -40,13 +40,17 @@ namespace WaterLevelController.Services
             if (dbSchedule == null)
                 return null;
 
+            int numberOfSensors = 0;
+            if(dbSchedule.Sensors != null)
+                numberOfSensors = dbSchedule.Sensors.Count;
+
             return new DtoScheduleListItem()
             {
                 Id = dbSchedule.Id,
                 Name = dbSchedule.Name,
                 MinWaterLevel = dbSchedule.MinWaterLevel,
                 Auto = dbSchedule.Auto,
-                NumberOfSensors = dbSchedule.Sensors.Count
+                NumberOfSensors = numberOfSensors
             };
         }
 

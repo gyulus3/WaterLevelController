@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj": {}
+    "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj": {}
   },
   "projects": {
-    "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj": {
+    "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj",
+        "projectUniqueName": "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj",
         "projectName": "WaterLevelControllerClient",
-        "projectPath": "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj",
+        "projectPath": "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\WaterLevelControllerClient.csproj",
         "packagesPath": "C:\\Users\\gyula\\.nuget\\packages\\",
-        "outputPath": "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\obj\\",
+        "outputPath": "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelControllerClient\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Microsoft\\Xamarin\\NuGet\\"

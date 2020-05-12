@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nnO9TUbdP8WoPpnhyJDyOulQHWuxC6fBjHSJgb8+vSj/d6Jl5oisHj/A6Fioeh3/TwSjZ27N9xVkMram1qzfig==",
+  "dgSpecHash": "sKqiXX6NnO1E4+aTUWuobKAmyoO9knkRnikYxThWFvjYADDCSr3lMdkenAhT7Mm5dhgzXsmDmn9naV7HXxDg2A==",
   "success": true,
-  "projectFilePath": "D:\\SZAKDOLGOZAT\\project\\WaterLevelController\\WaterLevelController\\WaterLevelController\\WaterLevelController.csproj",
+  "projectFilePath": "D:\\Work\\WaterLevelController\\WaterLevelController\\WaterLevelController\\WaterLevelController.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gyula\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\gyula\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\3.1.3\\microsoft.aspnetcore.jsonpatch.3.1.3.nupkg.sha512",

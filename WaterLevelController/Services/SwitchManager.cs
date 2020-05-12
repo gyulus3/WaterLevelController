@@ -38,7 +38,7 @@ namespace WaterLevelController.Services
                     Name = s.Name,
                     Mac = s.Mac,
                     Ip = s.Ip,
-                    SensorName = s.Sensor.Name
+                    SensorName = nameOfSensor
                 });
             }
             return dtoSwitches;
@@ -101,15 +101,21 @@ namespace WaterLevelController.Services
         {
             IEnumerable<Switch> switches = switchRepository.GetUnusedSwitches(sensorId);
             List<DtoSwitchListItem> dtoSwitches = new List<DtoSwitchListItem>();
+
+            string nameOfSensor = string.Empty;
             foreach (var s in switches)
             {
+                nameOfSensor = string.Empty;
+                if (s.Sensor != null)
+                    nameOfSensor = s.Sensor.Name;
+
                 dtoSwitches.Add(new DtoSwitchListItem()
                 {
                     Id = s.Id,
                     Name = s.Name,
                     Mac = s.Mac,
                     Ip = s.Ip,
-                    SensorName = s.Sensor.Name
+                    SensorName = nameOfSensor
                 });
             }
             return dtoSwitches;

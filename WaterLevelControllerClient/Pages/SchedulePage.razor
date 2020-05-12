@@ -27,8 +27,8 @@
                         <td>@schedule.Auto</td>
                         <td>@schedule.NumberOfSensors</td>
                         <td>
-                            <button type="button" class="btn btn-warning m-1" data-toggle="modal" data-target="#editScheduleModal"  @onclick="@(()=>SetEditSchedule(schedule.Id))">Edit</button>
-                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteScheduleModal"  @onclick="@(()=>SetDeleteSchedule(schedule.Id))">Delete</button>
+                            <button type="button" class="btn btn-warning m-1" data-toggle="modal" data-target="#editScheduleModal" @onclick="@(()=>SetEditSchedule(schedule.Id))">Edit</button>
+                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteScheduleModal" @onclick="@(()=>SetDeleteSchedule(schedule.Id))">Delete</button>
                         </td>
                     </tr>
                 }
@@ -48,7 +48,7 @@ else
     <span>Loading...</span>
 }
 
-<!-- Create zone modal -->
+<!-- Create schedule modal -->
 @if (createSchedule != null)
 {
     <div class="modal fade" id="createScheduleModal" tabindex="-1" role="dialog">
@@ -94,7 +94,7 @@ else
 
 @if (editSchedule != null)
 {
-    <!-- Edit zone modal -->
+    <!-- Edit schedule modal -->
     <div class="modal fade" id="editScheduleModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -105,11 +105,11 @@ else
                     <form>
                         <div class="form-group">
                             <label for="nameInput" class="mt-2">Name:</label>
-                            <input @bind="@editSchedule.Name" type="text" class="form-control" id="nameInput"  required />
+                            <input @bind="@editSchedule.Name" type="text" class="form-control" id="nameInput" required />
                             <label for="minWaterLevelInput" class="mt-2">MinWaterLevel:</label>
                             <input @bind="@editSchedule.MinWaterLevel" type="number" class="form-control" id="minWaterLevelInput" max="100" min="0" required />
                             <label for="autoInput" class="mt-2">Auto:</label>
-                            <input @bind="@editSchedule.Auto" type="checkbox"  class="form-control" id="autoInput" required />
+                            <input @bind="@editSchedule.Auto" type="checkbox" class="form-control" id="autoInput" required />
                         </div>
                         <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@EditSelectedSchedule">Edit</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -168,7 +168,7 @@ else
 
     protected async Task EditSelectedSchedule()
     {
-        
+
         await Http.PutAsJsonAsync(baseUrl + "schedules", editSchedule);
         await GetSchedules();
     }
