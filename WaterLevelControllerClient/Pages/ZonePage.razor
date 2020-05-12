@@ -1,0 +1,222 @@
+﻿@page "/zonePage"
+@inject HttpClient Http
+<h3>Zone manager</h3>
+<hr />
+
+@if (loaded)
+{
+    if (zones != null)
+    {
+        <h5>Select a zone:</h5>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <select id="zone_selector" class="custom-select my-2" value="@zones[0].Id" @onchange="@ZoneSelectorChanged">
+                            @foreach (var zone in zones)
+                            {
+                                <option value="@zone.Id">@zone.Name</option>
+                            }
+
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning m-1" data-toggle="modal" data-target="#editZoneModal">Edit</button>
+                        <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteZoneModal">Delete</button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    }
+
+    else
+    {
+        <p>No zone available!</p>
+    }
+    <button type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#addZoneModal" @onclick="@ClearCreateZone">Create new zone</button>
+    <hr />
+    <h5>Sensors in this zone:</h5>
+
+    if (sensors != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Ip</th>
+                    <th>Water Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sensor in sensors)
+                {
+                    <tr>
+                        <td>@sensor.Name</td>
+                        <td>@sensor.Ip</td>
+                        <td>@sensor.Data</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No sensor available in this zone!</p>
+    }
+
+}
+
+<!-- Create zone modal -->
+@if (createZone != null)
+{
+    <div class="modal fade" id="addZoneModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create new zone </h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@createZone.Name" type="text" class="form-control" id="nameInput" placeholder="Zone name" required />
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@PostCreateZone">Create</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (selectedZone != null)
+{
+    <!-- Delete zone modal -->
+    <div class="modal fade" id="deleteZoneModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Do you want to delete @selectedZone.Name zone? </h5>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-danger m-1" data-dismiss="modal" @onclick="@DeleteSelectedZone">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (selectedZone != null)
+{
+    <!-- Edit zone modal -->
+    <div class="modal fade" id="editZoneModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit zone</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@selectedZone.Name" type="text" class="form-control" id="nameInput" placeholder="@selectedZone.Name" required />
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@EditSelectedZone">Edit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+@code {
+    const string baseUrl = "https://localhost:5001/api/";
+    bool loaded = false;
+    DtoZoneListItem[] zones;
+    DtoZoneListItem selectedZone;
+    DtoSensorListItem[] sensors;
+    DtoCreateZone createZone = new DtoCreateZone();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetZones();
+        await GetSensors();
+        loaded = true;
+    }
+
+    protected async Task GetSensors()
+    {
+        DtoSensorListItem[] loadedSensors = await Http.GetJsonAsync<DtoSensorListItem[]>(baseUrl + "zones/sensors/" + selectedZone.Id);
+
+        if (loadedSensors != null && loadedSensors.Length > 0)
+            sensors = loadedSensors;
+
+        else
+            sensors = null;
+    }
+
+    protected async Task GetZones()
+    {
+        DtoZoneListItem[] loadedZones = await Http.GetJsonAsync<DtoZoneListItem[]>(baseUrl + "zones");
+
+        if (loadedZones != null && loadedZones.Length > 0)
+        {
+            zones = loadedZones;
+            selectedZone = zones[0];
+        }
+
+        else
+            zones = null;
+    }
+
+    protected void ClearCreateZone()
+    {
+        createZone = new DtoCreateZone();
+    }
+
+    protected async Task ZoneSelectorChanged(ChangeEventArgs e)
+    {
+
+        int selectedId = Convert.ToInt32(e.Value);
+        bool found = false;
+        int i = 0;
+        while (!found && i < zones.Length)
+        {
+            if (zones[i].Id == selectedId)
+            {
+                selectedZone = zones[i];
+            }
+            i++;
+        }
+        await GetSensors();
+
+    }
+
+    protected async Task PostCreateZone()
+    {
+        await Http.PostAsJsonAsync(baseUrl + "zones", createZone);
+        await GetZones();
+
+    }
+
+    protected async Task DeleteSelectedZone()
+    {
+        await Http.DeleteAsync(baseUrl + "zones/" + selectedZone.Id);
+        await GetZones();
+    }
+
+    protected async Task EditSelectedZone()
+    {
+        await Http.PutJsonAsync(baseUrl + "zones", selectedZone);
+        await GetZones();
+    }
+
+}

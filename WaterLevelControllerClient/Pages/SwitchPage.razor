@@ -1,0 +1,204 @@
+﻿@page "/switchPage"
+@inject HttpClient Http
+<h3>Switch Manager</h3>
+<hr />
+
+@if (loaded)
+{
+    <button type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#createSwitchModal" @onclick="@ClearCreateSwitch">Add new</button>
+
+    if (switches != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Ip</th>
+                    <th>Mac</th>
+                    <th>Connected sensor name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var _switch in switches)
+                {
+                    <tr>
+                        <td>@_switch.Name</td>
+                        <td>@_switch.Ip</td>
+                        <td>@_switch.Mac</td>
+                        <td>@_switch.SensorName</td>
+                        <td>
+                            <button type="button" class="btn btn-warning m-1" data-toggle="modal" data-target="#editSwitchModal" @onclick="@(()=>SetEditSwitch(_switch.Id))">Edit</button>
+                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteSwitchModal" @onclick="@(()=>SetDeleteSwitch(_switch.Id))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    else
+    {
+        <p>No switch available!</p>
+    }
+}
+
+else
+{
+    <hr>
+    <span>Loading...</span>
+}
+
+<!-- Create zone modal -->
+@if (createSwitch != null)
+{
+    <div class="modal fade" id="createSwitchModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create new switch </h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@createSwitch.Name" type="text" class="form-control" id="nameInput" placeholder="Name" required />
+                            <label for="macInput" class="mt-2">Mac:</label>
+                            <input @bind="@createSwitch.Mac" type="text" class="form-control" id="macInput" placeholder="MAC" required />
+                            <label for="ipInput" class="mt-2">Ip:</label>
+                            <input @bind="@createSwitch.Ip" type="text" class="form-control" id="ipInput" placeholder="IP" required />
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@PostCreateSwitch">Create</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<!-- Delete schedule modal -->
+<div class="modal fade" id="deleteSwitchModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to delete this switch? </h5>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-danger m-1" data-dismiss="modal" @onclick="@DeleteSelectedSwitch">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@if (editSwitch != null)
+{
+    <!-- Edit zone modal -->
+    <div class="modal fade" id="editSwitchModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit switch</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@editSwitch.Name" type="text" class="form-control" id="nameInput" placeholder="@editSwitch.Name" required />
+                            <label for="macInput" class="mt-2">Mac:</label>
+                            <input @bind="@editSwitch.Mac" type="text" class="form-control" id="macInput" placeholder="@editSwitch.Mac" required />
+                            <label for="ipInput" class="mt-2">Ip:</label>
+                            <input @bind="@editSwitch.Ip" type="text" class="form-control" id="ipInput" placeholder="@editSwitch.Ip" required />
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@EditSelectedSwitch">Edit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    const string baseUrl = "https://localhost:5001/api/";
+    bool loaded = false;
+    DtoSwitchListItem[] switches;
+    int selectedId;
+    DtoCreateSwitch createSwitch;
+    DtoEditSwitch editSwitch;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSwitches();
+        loaded = true;
+    }
+
+    protected async Task GetSwitches()
+    {
+        DtoSwitchListItem[] loadedSwitches = await Http.GetJsonAsync<DtoSwitchListItem[]>(baseUrl + "switches");
+
+        if (loadedSwitches != null && loadedSwitches.Length > 0)
+        {
+            switches = loadedSwitches;
+        }
+
+        else
+            switches = null;
+    }
+
+    protected void ClearCreateSwitch()
+    {
+        createSwitch = new DtoCreateSwitch();
+    }
+
+
+    protected async Task PostCreateSwitch()
+    {
+        await Http.PostAsJsonAsync(baseUrl + "switches", createSwitch);
+        await GetSwitches();
+
+    }
+
+    protected async Task DeleteSelectedSwitch()
+    {
+        await Http.DeleteAsync(baseUrl + "switches/" + selectedId);
+        await GetSwitches();
+    }
+
+    protected async Task EditSelectedSwitch()
+    {
+
+        await Http.PutAsJsonAsync(baseUrl + "switches", editSwitch);
+        await GetSwitches();
+    }
+
+    protected void SetEditSwitch(int id)
+    {
+        selectedId = id;
+
+        bool found = false;
+        int i = 0;
+        while (!found && i < switches.Length)
+        {
+            if (switches[i].Id == selectedId)
+            {
+                editSwitch = new DtoEditSwitch()
+                {
+                    Id = switches[i].Id,
+                    Name = switches[i].Name,
+                    Mac = switches[i].Mac,
+                    Ip = switches[i].Ip
+                };
+            }
+            i++;
+        }
+    }
+
+    protected void SetDeleteSwitch(int id)
+    {
+        selectedId = id;
+    }
+}

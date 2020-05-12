@@ -1,0 +1,203 @@
+﻿@page "/schedulePage"
+@inject HttpClient Http
+<h3>Schedule Manager</h3>
+<hr />
+
+@if (loaded)
+{
+    <button type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#createScheduleModal" @onclick="@ClearCreateSchedule">Add new</button>
+
+    if (schedules != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Min Water Level</th>
+                    <th>Auto</th>
+                    <th>Connected sensors</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var schedule in schedules)
+                {
+                    <tr>
+                        <td>@schedule.Name</td>
+                        <td>@schedule.MinWaterLevel</td>
+                        <td>@schedule.Auto</td>
+                        <td>@schedule.NumberOfSensors</td>
+                        <td>
+                            <button type="button" class="btn btn-warning m-1" data-toggle="modal" data-target="#editScheduleModal"  @onclick="@(()=>SetEditSchedule(schedule.Id))">Edit</button>
+                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteScheduleModal"  @onclick="@(()=>SetDeleteSchedule(schedule.Id))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    else
+    {
+        <p>No schedule available!</p>
+    }
+}
+
+else
+{
+    <hr>
+    <span>Loading...</span>
+}
+
+<!-- Create zone modal -->
+@if (createSchedule != null)
+{
+    <div class="modal fade" id="createScheduleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create new zone </h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@createSchedule.Name" type="text" class="form-control" id="nameInput" placeholder="Schedule name" required />
+                            <label for="minWaterLevelInput" class="mt-2">MinWaterLevel:</label>
+                            <input @bind="@createSchedule.MinWaterLevel" type="number" class="form-control" id="minWaterLevelInput" placeholder="Min water level" max="100" min="0" required />
+                            <label for="autoInput" class="mt-2">Auto:</label>
+                            <input @bind="@createSchedule.Auto" type="checkbox" class="form-control" id="autoInput" required />
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@PostCreateSchedule">Create</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Delete schedule modal -->
+<div class="modal fade" id="deleteScheduleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to delete this schedule? </h5>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-danger m-1" data-dismiss="modal" @onclick="@DeleteSelectedSchedule">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (editSchedule != null)
+{
+    <!-- Edit zone modal -->
+    <div class="modal fade" id="editScheduleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit schedule</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@editSchedule.Name" type="text" class="form-control" id="nameInput"  required />
+                            <label for="minWaterLevelInput" class="mt-2">MinWaterLevel:</label>
+                            <input @bind="@editSchedule.MinWaterLevel" type="number" class="form-control" id="minWaterLevelInput" max="100" min="0" required />
+                            <label for="autoInput" class="mt-2">Auto:</label>
+                            <input @bind="@editSchedule.Auto" type="checkbox"  class="form-control" id="autoInput" required />
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@EditSelectedSchedule">Edit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    const string baseUrl = "https://localhost:5001/api/";
+    bool loaded = false;
+    DtoScheduleListItem[] schedules;
+    int selectedId;
+    DtoCreateSchedule createSchedule;
+    DtoEditSchedule editSchedule;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSchedules();
+        loaded = true;
+    }
+
+    protected async Task GetSchedules()
+    {
+        DtoScheduleListItem[] loadedSchedules = await Http.GetJsonAsync<DtoScheduleListItem[]>(baseUrl + "schedules");
+
+        if (loadedSchedules != null && loadedSchedules.Length > 0)
+        {
+            schedules = loadedSchedules;
+        }
+
+        else
+            schedules = null;
+    }
+
+    protected void ClearCreateSchedule()
+    {
+        createSchedule = new DtoCreateSchedule();
+    }
+
+
+    protected async Task PostCreateSchedule()
+    {
+        await Http.PostAsJsonAsync(baseUrl + "schedules", createSchedule);
+        await GetSchedules();
+
+    }
+
+    protected async Task DeleteSelectedSchedule()
+    {
+        await Http.DeleteAsync(baseUrl + "schedules/" + selectedId);
+        await GetSchedules();
+    }
+
+    protected async Task EditSelectedSchedule()
+    {
+        
+        await Http.PutAsJsonAsync(baseUrl + "schedules", editSchedule);
+        await GetSchedules();
+    }
+
+    protected void SetEditSchedule(int id)
+    {
+        selectedId = id;
+
+        bool found = false;
+        int i = 0;
+        while (!found && i < schedules.Length)
+        {
+            if (schedules[i].Id == selectedId)
+            {
+                editSchedule = new DtoEditSchedule()
+                {
+                    Id = schedules[i].Id,
+                    Name = schedules[i].Name,
+                    MinWaterLevel = schedules[i].MinWaterLevel,
+                    Auto = schedules[i].Auto
+                };
+                found = true;
+            }
+            i++;
+        }
+    }
+
+    protected void SetDeleteSchedule(int id)
+    {
+        selectedId = id;
+    }
+}

@@ -2,7 +2,8 @@
   "runtimeOptions": {
     "additionalProbingPaths": [
       "C:\\Users\\gyula\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\gyula\\.nuget\\packages"
+      "C:\\Users\\gyula\\.nuget\\packages",
+      "D:\\Microsoft\\Xamarin\\NuGet"
     ]
   }
 }

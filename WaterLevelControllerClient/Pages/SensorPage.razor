@@ -1,0 +1,270 @@
+﻿@page "/sensorPage"
+@inject HttpClient Http
+<h3>Sensor Manager</h3>
+<hr />
+
+@if (loaded)
+{
+    <button type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#createSensorModal" @onclick="@ClearCreateSensor">Add new</button>
+
+    if (sensors != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Ip</th>
+                    <th>Mac</th>
+                    <th>Water Level</th>
+                    <th>Schedule Name</th>
+                    <th>Switch Name</th>
+                    <th>Zone Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sensor in sensors)
+                {
+                    <tr>
+                        <td>@sensor.Name</td>
+                        <td>@sensor.Ip</td>
+                        <td>@sensor.Mac</td>
+                        <td>@sensor.Data</td>
+                        <td>@sensor.ScheduleName</td>
+                        <td>@sensor.SwitchName</td>
+                        <td>@sensor.ZoneName</td>
+                        <td>
+                            <button type="button" class="btn btn-warning m-1" data-toggle="modal" data-target="#editSensorModal" @onclick="@(()=>SetEditSensor(sensor.Id))">Edit</button>
+                            <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteSensorModal" @onclick="@(()=>SetDeleteSensor(sensor.Id))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    else
+    {
+        <p>No sensor available!</p>
+    }
+}
+
+else
+{
+    <hr>
+    <span>Loading...</span>
+}
+
+<!-- Create zone modal -->
+@if (createSensor != null)
+{
+    <div class="modal fade" id="createSensorModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create new sensor </h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@createSensor.Name" type="text" class="form-control" id="nameInput" placeholder="Name" required />
+                            <label for="ipInput" class="mt-2">Ip:</label>
+                            <input @bind="@createSensor.Ip" type="text" class="form-control" id="ipInput" placeholder="IP" required />
+                            <label for="macInput" class="mt-2">Mac:</label>
+                            <input @bind="@createSensor.Mac" type="text" class="form-control" id="macInput" placeholder="MAC" required />
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@PostCreateSensor">Create</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Delete schedule modal -->
+<div class="modal fade" id="deleteSensorModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to delete this schedule? </h5>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-danger m-1" data-dismiss="modal" @onclick="@DeleteSelectedSensor">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (editSensor != null)
+{
+    <!-- Edit zone modal -->
+    <div class="modal fade" id="editSensorModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit sensor</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameInput" class="mt-2">Name:</label>
+                            <input @bind="@editSensor.Name" type="text" class="form-control" id="nameInput" required />
+                            <label for="ipInput" class="mt-2">Ip:</label>
+                            <input @bind="@editSensor.Ip" type="text" class="form-control" id="ipInput" required />
+                            <label for="macInput" class="mt-2">Mac:</label>
+                            <input @bind="@editSensor.Mac" type="text" class="form-control" id="macInput" required />
+                            <label for="switchSelector" class="mt-2">Switch:</label>
+                            <select id="switchSelector" class="custom-select my-2" @bind="@selectedScheduleId">
+                                <option value="0">Not selected</option>
+                                @foreach (var sw in schedules)
+                                {
+                                    <option value="@sw.Id">@sw.Name</option>
+                                }
+
+                            </select>
+
+                        </div>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="@EditSelectedSensor">Edit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    const string baseUrl = "https://localhost:5001/api/";
+    bool loaded = false;
+    DtoSensorListItemWithZone[] sensors;
+    DtoScheduleListItem[] schedules;
+    DtoSwitchListItem[] switches;
+    DtoZoneListItem[] zones;
+    int selectedZoneId;
+    int selectedSwitchId;
+    int selectedScheduleId;
+    int selectedId;
+    DtoCreateSensor createSensor;
+    DtoEditSensor editSensor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSensors();
+        loaded = true;
+    }
+
+    protected async Task GetSensors()
+    {
+        DtoSensorListItemWithZone[] loadedSensors = await Http.GetJsonAsync<DtoSensorListItemWithZone[]>(baseUrl + "sensors");
+
+        if (loadedSensors != null && loadedSensors.Length > 0)
+        {
+            sensors = loadedSensors;
+        }
+
+        else
+            sensors = null;
+    }
+
+    protected async Task GetSwitches()
+    {
+        DtoSwitchListItem[] loadedSwitches = await Http.GetJsonAsync<DtoSwitchListItem[]>(baseUrl + "switches/unusedSwitches/" + selectedId);
+
+        if (loadedSwitches != null && loadedSwitches.Length > 0)
+        {
+            switches = loadedSwitches;
+        }
+
+        else
+            switches = null;
+    }
+
+    protected async Task GetSchedules()
+    {
+        DtoScheduleListItem[] loadedSchedules = await Http.GetJsonAsync<DtoScheduleListItem[]>(baseUrl + "schedules");
+
+        if (loadedSchedules != null && loadedSchedules.Length > 0)
+        {
+            schedules = loadedSchedules;
+        }
+
+        else
+            schedules = null;
+    }
+
+    protected async Task GetZones()
+    {
+        DtoZoneListItem[] loadedZones = await Http.GetJsonAsync<DtoZoneListItem[]>(baseUrl + "zones");
+
+        if (loadedZones != null && loadedZones.Length > 0)
+        {
+            zones = loadedZones;
+        }
+
+        else
+            zones = null;
+    }
+
+    protected void ClearCreateSensor()
+    {
+        createSensor = new DtoCreateSensor();
+    }
+
+
+    protected async Task PostCreateSensor()
+    {
+        await Http.PostAsJsonAsync(baseUrl + "sensors", createSensor);
+        await GetSensors();
+
+    }
+
+    protected async Task DeleteSelectedSensor()
+    {
+        await Http.DeleteAsync(baseUrl + "sensors/" + selectedId);
+        await GetSensors();
+    }
+
+    protected async Task EditSelectedSensor()
+    {
+        editSensor.ZoneId = selectedZoneId;
+        editSensor.ScheduleId = selectedScheduleId;
+        editSensor.SwitchId = selectedSwitchId;
+        await Http.PutAsJsonAsync(baseUrl + "sensors", editSensor);
+        await GetSensors();
+    }
+
+    protected async Task SetEditSensor(int id)
+    {
+        selectedId = id;
+        await GetSchedules();
+        await GetSwitches();
+        await GetZones();
+        selectedZoneId = 0;
+        selectedScheduleId = 0;
+        selectedSwitchId = 0;
+
+        bool found = false;
+        int i = 0;
+        while (!found && i < sensors.Length)
+        {
+            if (sensors[i].Id == selectedId)
+            {
+                editSensor = new DtoEditSensor();
+                editSensor.Id = sensors[i].Id;
+                editSensor.Ip = sensors[i].Ip;
+                editSensor.Mac = sensors[i].Mac;
+                editSensor.Name = sensors[i].Name;
+                found = true;
+            }
+            i++;
+        }
+    }
+
+    protected void SetDeleteSensor(int id)
+    {
+        selectedId = id;
+    }
+}
