@@ -35,6 +35,7 @@
                         <td>
                             <button type="button" class="btn btn-warning m-1" data-toggle="modal" data-target="#editSensorModal" @onclick="@(()=>SetEditSensor(sensor.Id))">Edit</button>
                             <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteSensorModal" @onclick="@(()=>SetDeleteSensor(sensor.Id))">Delete</button>
+                            <button type="button" class="btn btn-success m-1" @onclick="@(()=>RefillSensorClick(sensor.Id))">Refill</button>
                         </td>
                     </tr>
                 }
@@ -116,12 +117,31 @@ else
                             <input @bind="@editSensor.Ip" type="text" class="form-control" id="ipInput" required />
                             <label for="macInput" class="mt-2">Mac:</label>
                             <input @bind="@editSensor.Mac" type="text" class="form-control" id="macInput" required />
-                            <label for="switchSelector" class="mt-2">Switch:</label>
-                            <select id="switchSelector" class="custom-select my-2" @bind="@selectedScheduleId">
+                            <label for="scheduleSelector" class="mt-2">Schedule:</label>
+                            <select id="scheduleSelector" class="custom-select my-2" @bind="@selectedScheduleId">
                                 <option value="0">Not selected</option>
-                                @foreach (var sw in schedules)
+                                @foreach (var sc in schedules)
+                                {
+                                    <option value="@sc.Id">@sc.Name</option>
+                                }
+
+                            </select>
+                            <label for="switchSelector" class="mt-2">Switch:</label>
+                            <select id="switchSelector" class="custom-select my-2" @bind="@selectedSwitchId">
+                                <option value="0">Not selected</option>
+                                @foreach (var sw in switches)
                                 {
                                     <option value="@sw.Id">@sw.Name</option>
+                                }
+
+                            </select>
+
+                            <label for="zoneSelector" class="mt-2">Zone:</label>
+                            <select id="zoneSelector" class="custom-select my-2" @bind="@selectedZoneId">
+                                <option value="0">Not selected</option>
+                                @foreach (var zone in zones)
+                                {
+                                    <option value="@zone.Id">@zone.Name</option>
                                 }
 
                             </select>
@@ -154,6 +174,11 @@ else
     {
         await GetSensors();
         loaded = true;
+    }
+
+    protected async Task RefillSensor()
+    {
+
     }
 
     protected async Task GetSensors()
@@ -261,6 +286,12 @@ else
             }
             i++;
         }
+    }
+
+    protected async Task RefillSensorClick(int id)
+    {
+        selectedId = id;
+        await RefillSensor();
     }
 
     protected void SetDeleteSensor(int id)

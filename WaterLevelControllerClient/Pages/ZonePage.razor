@@ -40,6 +40,7 @@
 
     if (sensors != null)
     {
+        <button type="button" class="btn btn-success m-1" @onclick="@RefillAllClicked">Refill all</button>
         <table class="table">
             <thead>
                 <tr>
@@ -158,11 +159,13 @@ else
 
     protected async Task GetSensors()
     {
-        DtoSensorListItem[] loadedSensors = await Http.GetJsonAsync<DtoSensorListItem[]>(baseUrl + "zones/sensors/" + selectedZone.Id);
-
-        if (loadedSensors != null && loadedSensors.Length > 0)
-            sensors = loadedSensors;
-
+        if(selectedZone != null)
+        {
+            DtoSensorListItem[] loadedSensors = await Http.GetJsonAsync<DtoSensorListItem[]>(baseUrl + "zones/sensors/" + selectedZone.Id);
+            if (loadedSensors != null && loadedSensors.Length > 0)
+                sensors = loadedSensors;
+            else sensors = null;
+        }
         else
             sensors = null;
     }
@@ -201,6 +204,11 @@ else
             i++;
         }
         await GetSensors();
+
+    }
+
+    protected async Task RefillAllClicked()
+    {
 
     }
 

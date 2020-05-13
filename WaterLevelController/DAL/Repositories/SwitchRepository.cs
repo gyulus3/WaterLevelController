@@ -102,5 +102,18 @@ namespace WaterLevelController.DAL.Repositories
                     unused.Add(sw);
             return unused;
         }
+
+        public Switch RemoveSensorFromSwitch(Sensor sensor, int? switchId)
+        {
+            if (switchId == null)
+                return null;
+            var dbSwitch = db.Switches.FirstOrDefault(s => s.Id == switchId);
+            if (dbSwitch != null)
+            {
+                dbSwitch.Sensor = null;
+                db.SaveChanges();
+            }
+            return dbSwitch;
+        }
     }
 }

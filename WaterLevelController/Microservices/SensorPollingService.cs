@@ -55,7 +55,7 @@ namespace WaterLevelController.Microservices
             {
                 try
                 {
-                    var json = webClient.DownloadString("http://" + ip + ":3000/data");
+                    var json = webClient.DownloadString("http://" + "localhost" + ":3000/data");
                     Sensor o = JsonConvert.DeserializeObject<Sensor>(json);
                     return o.Data;
                 }

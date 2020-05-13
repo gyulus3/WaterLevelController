@@ -64,6 +64,7 @@ namespace WaterLevelController.Services
         
             if(value.ZoneId == 0)
             {
+                zoneRepository.RemoveSensorFromZone(dbSensor, dbSensor.ZoneId);
                 sensorRepository.RemoveZoneFromSensor(value.Id);
                 dbSensor.ZoneId = null;
             }
@@ -75,6 +76,7 @@ namespace WaterLevelController.Services
 
             if(value.SwitchId == 0)
             {
+                switchRepository.RemoveSensorFromSwitch(dbSensor, dbSensor.SwitchId);
                 sensorRepository.RemoveSwitchFromSensor(value.Id);
                 dbSensor.SwitchId = null;
             }
@@ -151,10 +153,10 @@ namespace WaterLevelController.Services
 
         public DtoSensorListItemWithZone AddScheduleToSensor(int sensorId, int scheduleId)
         {
-            var dbSchedule = zoneRepository.GetById(scheduleId);
+            var dbSchedule = scheduleRepository.GetById(scheduleId);
             if (dbSchedule == null)
                 return null;
-            var dbSensor = sensorRepository.AddZoneToSensor(dbSchedule, sensorId);
+            var dbSensor = sensorRepository.AddScheduleToSensor(dbSchedule, sensorId);
 
             return SensorToDtoModel(dbSensor);
         }

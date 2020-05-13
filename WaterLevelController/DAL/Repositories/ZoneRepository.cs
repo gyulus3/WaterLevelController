@@ -74,6 +74,19 @@ namespace WaterLevelController.DAL.Repositories
             return db.Zones.ToList();
         }
 
+        public Zone RemoveSensorFromZone(Sensor sensor, int? zoneId)
+        {
+            if (zoneId == null)
+                return null;
+            var dbZone = db.Zones.FirstOrDefault(s => s.Id == zoneId);
+            if (dbZone != null)
+            {
+                dbZone.Sensors.Remove(sensor);
+                db.SaveChanges();
+            }
+            return dbZone;
+        }
+
         public Zone Update(Zone value)
         {
             using (var tran = db.Database.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))

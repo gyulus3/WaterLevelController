@@ -10,6 +10,8 @@ namespace WaterLevelController.DAL.Interfaces
     {
         public Switch AddSensorToSwitchById(Sensor sensor, int switchId);
 
+        public Switch RemoveSensorFromSwitch(Sensor sensor, int? switchId);
+
         public IEnumerable<Switch> GetUnusedSwitches(int sensorId);
     }
 }
