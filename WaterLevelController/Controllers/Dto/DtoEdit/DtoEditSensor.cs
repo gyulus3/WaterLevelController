@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WaterLevelController.Controllers.Dto
+﻿namespace WaterLevelController.Controllers.Dto
 {
     public class DtoEditSensor
     {

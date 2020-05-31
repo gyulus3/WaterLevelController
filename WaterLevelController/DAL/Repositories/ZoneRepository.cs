@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WaterLevelController.DAL.EfDbContext;
 using WaterLevelController.DAL.Interfaces;
 
@@ -19,7 +18,7 @@ namespace WaterLevelController.DAL.Repositories
         public Zone AddSensorToZoneById(Sensor sensor, int zoneId)
         {
             var dbZone = db.Zones.FirstOrDefault(z => z.Id == zoneId);
-            if (dbZone == null)
+            if (dbZone != null)
             {
                 dbZone.Sensors.Add(sensor);
                 db.SaveChanges();
@@ -47,9 +46,9 @@ namespace WaterLevelController.DAL.Repositories
         public IEnumerable<Sensor> GetSensorsByZoneId(int id)
         {
             var dbZone = db.Zones.FirstOrDefault(z => z.Id == id);
-            if (dbZone == null)
-                return null;
-            return dbZone.Sensors;
+            if(dbZone != null)
+                return dbZone.Sensors;
+            return new List<Sensor>();
         }
 
         public Zone Insert(Zone value)

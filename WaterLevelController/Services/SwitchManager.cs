@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WaterLevelController.Controllers.Dto;
 using WaterLevelController.Controllers.Dto.DtoEdit;
 using WaterLevelController.DAL.EfDbContext;

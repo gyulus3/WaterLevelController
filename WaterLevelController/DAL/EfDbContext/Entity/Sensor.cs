@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WaterLevelController.DAL.EfDbContext
 {
@@ -15,7 +11,7 @@ namespace WaterLevelController.DAL.EfDbContext
         public string Mac { get; set; }
         [Required]
         public string Ip { get; set; }
-        public int Data { get; set; }
+        public string Data { get; set; }
         public int? SwitchId { get; set; }
         public virtual Switch Switch { get; set; }
         public int? ScheduleId { get; set; }

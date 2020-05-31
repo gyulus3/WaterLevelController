@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WaterLevelController.Controllers.Dto;
 using WaterLevelController.DAL.EfDbContext;
 using WaterLevelController.DAL.Interfaces;
@@ -48,7 +44,7 @@ namespace WaterLevelController.Services
         {
             IEnumerable<Sensor> sensors = zoneRepository.GetSensorsByZoneId(zoneId);
             if(sensors == null)
-                return null;
+                return new List<DtoSensorListItem>();
             List<DtoSensorListItem> dtoSensorListItems = new List<DtoSensorListItem>();
             foreach (var s in sensors)
                 dtoSensorListItems.Add(new DtoSensorListItem()

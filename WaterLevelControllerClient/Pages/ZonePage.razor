@@ -209,7 +209,13 @@ else
 
     protected async Task RefillAllClicked()
     {
-
+        List<int> ids = new List<int>();
+        foreach(var sensor in sensors)
+        {
+            ids.Add(sensor.Id);
+        }
+        await Http.PutJsonAsync(baseUrl + "refill", ids);
+        await GetSensors();
     }
 
     protected async Task PostCreateZone()

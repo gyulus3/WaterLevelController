@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using WaterLevelController.Controllers.Dto;
 using WaterLevelController.Services;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WaterLevelController.Controllers
 {
@@ -14,7 +9,7 @@ namespace WaterLevelController.Controllers
     [ApiController]
     public class SensorsController : ControllerBase
     {
-        SensorManager sensorManager;
+        readonly SensorManager sensorManager;
         public SensorsController(SensorManager sensorManager)
         {
             this.sensorManager = sensorManager;

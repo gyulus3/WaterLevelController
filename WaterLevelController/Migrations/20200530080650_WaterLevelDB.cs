@@ -2,7 +2,7 @@
 
 namespace WaterLevelController.Migrations
 {
-    public partial class CreateWaterLevelDb : Migration
+    public partial class WaterLevelDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -58,7 +58,7 @@ namespace WaterLevelController.Migrations
                     Name = table.Column<string>(nullable: false),
                     Mac = table.Column<string>(nullable: false),
                     Ip = table.Column<string>(nullable: false),
-                    Data = table.Column<int>(nullable: false),
+                    Data = table.Column<string>(nullable: true),
                     SwitchId = table.Column<int>(nullable: true),
                     ScheduleId = table.Column<int>(nullable: true),
                     ZoneId = table.Column<int>(nullable: true)

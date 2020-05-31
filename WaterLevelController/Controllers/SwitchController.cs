@@ -1,9 +1,5 @@
-﻿using Castle.Core.Internal;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WaterLevelController.Controllers.Dto;
 using WaterLevelController.Controllers.Dto.DtoEdit;
 using WaterLevelController.Services;
@@ -14,7 +10,7 @@ namespace WaterLevelController.Controllers
     [ApiController]
     public class SwitchController : ControllerBase
     {
-        SwitchManager switchManager;
+        readonly SwitchManager switchManager;
 
         public SwitchController(SwitchManager switchManager)
         {

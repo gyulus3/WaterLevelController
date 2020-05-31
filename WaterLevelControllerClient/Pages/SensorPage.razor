@@ -176,11 +176,6 @@ else
         loaded = true;
     }
 
-    protected async Task RefillSensor()
-    {
-
-    }
-
     protected async Task GetSensors()
     {
         DtoSensorListItemWithZone[] loadedSensors = await Http.GetJsonAsync<DtoSensorListItemWithZone[]>(baseUrl + "sensors");
@@ -290,8 +285,7 @@ else
 
     protected async Task RefillSensorClick(int id)
     {
-        selectedId = id;
-        await RefillSensor();
+        await Http.GetAsync(baseUrl + "refill/" + id);
     }
 
     protected void SetDeleteSensor(int id)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using WaterLevelController.Controllers.Dto;
 using WaterLevelController.Services;
@@ -14,7 +10,7 @@ namespace WaterLevelController.Controllers
     [ApiController]
     public class ZonesController : ControllerBase
     {
-        ZoneManager zoneManager;
+        readonly ZoneManager zoneManager;
         public ZonesController(ZoneManager zoneManager)
         {
             this.zoneManager = zoneManager;

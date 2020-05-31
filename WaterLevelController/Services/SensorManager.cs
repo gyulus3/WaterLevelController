@@ -1,8 +1,5 @@
-﻿using Castle.Core.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WaterLevelController.Controllers.Dto;
 using WaterLevelController.DAL.EfDbContext;
 using WaterLevelController.DAL.Interfaces;
@@ -55,7 +52,6 @@ namespace WaterLevelController.Services
             {
                 scheduleRepository.RemoveSensorFromSchedule(dbSensor, dbSensor.ScheduleId);
                 sensorRepository.RemoveScheduleFromSensor(value.Id);
-                dbSensor.ScheduleId = null;
             }
 
             else
@@ -66,19 +62,16 @@ namespace WaterLevelController.Services
             {
                 zoneRepository.RemoveSensorFromZone(dbSensor, dbSensor.ZoneId);
                 sensorRepository.RemoveZoneFromSensor(value.Id);
-                dbSensor.ZoneId = null;
             }
 
             else
-                if (value.ZoneId != 0)
-                    if (AddZoneToSensor(value.Id, value.ZoneId) != null)
-                        zoneRepository.AddSensorToZoneById(dbSensor, value.ZoneId);
+                if (AddZoneToSensor(value.Id, value.ZoneId) != null)
+                    zoneRepository.AddSensorToZoneById(dbSensor, value.ZoneId);
 
             if(value.SwitchId == 0)
             {
                 switchRepository.RemoveSensorFromSwitch(dbSensor, dbSensor.SwitchId);
                 sensorRepository.RemoveSwitchFromSensor(value.Id);
-                dbSensor.SwitchId = null;
             }
 
             else
@@ -139,6 +132,16 @@ namespace WaterLevelController.Services
             return SensorToDtoModel(dbSensor);
         }
 
+        public bool AddSensorToRefillManager(int id)
+        {
+            Sensor sensor = sensorRepository.GetById(id);
+            if(sensor != null)
+            {
+                RefillManager.add(sensor.Id);
+                return true;
+            }
+            return false;
+        }
 
 
         public DtoSensorListItemWithZone AddSwitchToSensor(int sensorId, int switchId)

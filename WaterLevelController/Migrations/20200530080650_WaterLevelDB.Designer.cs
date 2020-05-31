@@ -10,8 +10,8 @@ using WaterLevelController.DAL.EfDbContext;
 namespace WaterLevelController.Migrations
 {
     [DbContext(typeof(WaterLevelDbContext))]
-    [Migration("20200508155924_CreateWaterLevelDb")]
-    partial class CreateWaterLevelDb
+    [Migration("20200530080650_WaterLevelDB")]
+    partial class WaterLevelDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,8 +49,8 @@ namespace WaterLevelController.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Data")
-                        .HasColumnType("int");
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ip")
                         .IsRequired()
